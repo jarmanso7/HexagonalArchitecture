@@ -13,7 +13,7 @@
             IsCompleted = true;
         }
 
-        public void Complete()
+        internal void Complete()
         {
             IsCompleted = true;
         }

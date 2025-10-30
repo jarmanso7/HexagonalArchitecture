@@ -6,6 +6,6 @@ namespace TaskManagement.Core.Ports.Driving
     {
         TaskItem CreateTask(string title);
         void CompleteTask(Guid id);
-        TaskItem? GetTaks(Guid id);
+        TaskItem? GetTask(Guid id);
     }
 }

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TaskManagement.Core.Domain;
 
-namespace TaskManagement.Core.Ports
+namespace TaskManagement.Core.Ports.Driving
 {
-    internal interface ITaskService
+    public interface ITaskService
     {
+        TaskItem CreateTask(string title);
+        void CompleteTask(Guid id);
+        TaskItem? GetTaks(Guid id);
     }
 }

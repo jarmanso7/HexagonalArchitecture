@@ -1,6 +1,7 @@
 ﻿using TaskManagement.Core.Domain;
 using TaskManagement.Core.Ports.Driven;
 using TaskManagement.Core.Ports.Driving;
+using TaskManagement.Core.Ports.Driving.DTOs;
 
 namespace TaskManagement.Core.Ports.Services
 {
@@ -14,11 +15,17 @@ namespace TaskManagement.Core.Ports.Services
             _taskRepository = taskRepository;
         }
 
-        public TaskItem CreateTask(string title)
+        public TaskItemDto CreateTask(string title)
         {
             var task = new TaskItem(title);
             _taskRepository.Save(task);
-            return task;
+
+            return new TaskItemDto()
+            {
+                Id = task.Id,
+                IsCompleted = task.IsCompleted,
+                Title = task.Title
+            };
         }
 
         public void CompleteTask(Guid id)
@@ -32,9 +39,16 @@ namespace TaskManagement.Core.Ports.Services
             }
         }
 
-        public TaskItem? GetTask(Guid id)
+        public TaskItemDto? GetTask(Guid id)
         {
-            return _taskRepository.GetById(id);
+            var task = _taskRepository.GetById(id);
+
+            return new TaskItemDto()
+            {
+                Id = task.Id,
+                IsCompleted = task.IsCompleted,
+                Title = task.Title
+            };
         }
     }
 }

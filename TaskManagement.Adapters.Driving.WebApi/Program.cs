@@ -25,13 +25,17 @@ namespace TaskManagement.Adapters.Driving.WebApi
             builder.Services.AddScoped<ITaskRepository, EfTaskRepository>();
             builder.Services.AddScoped<ITaskService, TaskService>();
 
-            // 1. Create a single, open connection.
-            //    It must be a singleton to keep the database alive.
-            const string connectionString = "DataSource=:memory:";
-            var connection = new SqliteConnection(connectionString);
-            connection.Open(); // <-- This keeps the connection open
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.LicenseKey = builder.Configuration["AutoMapper:LicenseKey"];
+            }, typeof(Program).Assembly);
 
-            builder.Services.AddSingleton(connection);
+            builder.Services.AddSingleton(provider =>
+            {
+                var connection = new SqliteConnection("DataSource=:memory:");
+                connection.Open(); // Keep the connection open
+                return connection;
+            });
 
             builder.Services.AddDbContext<TaskDbContext>(
                 (serviceProvider, options) =>
@@ -40,7 +44,6 @@ namespace TaskManagement.Adapters.Driving.WebApi
                     options.UseSqlite(con);
                 }
             );
-
 
             var app = builder.Build();
 

@@ -482,3 +482,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/TaskManagement.Adapters.Driving.ConsoleApp/App.config
+/TaskManagement.Adapters.Driving.ConsoleApp/appsettings.json
+/TaskManagement.Adapters.Driving.WebApi/appsettings.Development.json

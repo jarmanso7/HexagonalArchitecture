@@ -1,4 +1,6 @@
-﻿using TaskManagement.Core.Ports.Driving;
+﻿using AutoMapper;
+using TaskManagement.Core.Ports.Driving;
+using TaskManagement.Core.Ports.Driving.DTOs;
 
 namespace TaskManagement.Adapters.Driving.ConsoleApp
 {
@@ -6,10 +8,12 @@ namespace TaskManagement.Adapters.Driving.ConsoleApp
     public class ConsoleAppRunner
     {
         private readonly ITaskService _taskService;
+        private readonly IMapper _mapper;
 
-        public ConsoleAppRunner(ITaskService taskService)
+        public ConsoleAppRunner(ITaskService taskService, IMapper mapper)
         {
             _taskService = taskService;
+            _mapper = mapper;
         }
 
         public void Run()
@@ -29,7 +33,9 @@ namespace TaskManagement.Adapters.Driving.ConsoleApp
             // Retrieve it
             Console.WriteLine("Retrieving task...");
             var retrievedTask = _taskService.GetTask(task.Id);
-            Console.WriteLine($"Retrieved task {task.Id}. Title: {task.Title}");
+
+            var dtoTask = _mapper.Map<TaskItemDto>(retrievedTask);
+            Console.WriteLine($"Retrieved task {dtoTask.Id}. Title: {dtoTask.Title}");
         }
     }
 }

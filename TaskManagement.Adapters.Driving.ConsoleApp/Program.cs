@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TaskManagement.Adapters.Driven.EntityFramework;
@@ -18,10 +17,20 @@ namespace TaskManagement.Adapters.Driving.ConsoleApp
                 .ConfigureServices((context, services) =>
                 {
                     services.AddScoped<ITaskRepository, EfTaskRepository>();
-
                     services.AddScoped<ITaskService, TaskService>();
 
-                    services.AddSingleton(new SqliteConnection("DataSource=:memory:"));
+                    services.AddAutoMapper(cfg =>
+                    {
+                        cfg.LicenseKey = context.Configuration["AutoMapper:LicenseKey"];
+                    }, typeof(Program).Assembly);
+
+                    services.AddSingleton(provider =>
+                    {
+                        var connection = new SqliteConnection("DataSource=:memory:");
+                        connection.Open(); // Keep the connection open
+                        return connection;
+                    });
+
                     services.AddDbContext<TaskDbContext>(
                         (serviceProvider, options) =>
                         {
@@ -36,17 +45,15 @@ namespace TaskManagement.Adapters.Driving.ConsoleApp
 
             using (var scope = host.Services.CreateScope())
             {
-                var con = scope.ServiceProvider.GetRequiredService<SqliteConnection>();
-                con.Open();
-
                 var dbContext = scope.ServiceProvider.GetRequiredService<TaskDbContext>();
-                // 3. Create the database schema
                 dbContext.Database.EnsureCreated();
 
                 var appRunner = scope.ServiceProvider.GetService<ConsoleAppRunner>();
 
                 appRunner?.Run();
             }
+
+            host.Dispose();
         }
     }
 }

@@ -1,7 +1,9 @@
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagement.Core.Ports.Driving;
 using TaskManagement.Core.Ports.Driving.DTOs;
+using TaskManagement.Core.UseCases.Commands;
+using TaskManagement.Core.UseCases.Queries;
 
 namespace TaskManagement.Adapters.Driving.WebApi.Controllers
 {
@@ -9,36 +11,38 @@ namespace TaskManagement.Adapters.Driving.WebApi.Controllers
     [Route("[controller]/[Action]")]
     public class TasksController : ControllerBase
     {
-        private readonly ITaskService _taskService;
+        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
         public TasksController(
-            ITaskService taskService,
+            IMediator mediator,
             IMapper mapper)
         {
-            _taskService = taskService;
+            _mediator = mediator;
             _mapper = mapper;
         }
 
         [HttpPost()]
-        public IActionResult Create(string title)
+        public async Task<IActionResult> Create(string title)
         {
-            var task = _taskService.CreateTask(title);
+            var command = new CreateTaskCommand(title);
+            var task = await _mediator.Send(command); //Returns the TaskItem entity
             return Ok(_mapper.Map<TaskItemDto>(task));
         }
 
         [HttpGet()]
-        public IActionResult Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            var task = _taskService.GetTask(new Guid(id));
+            var query = new GetTaskQuery(new Guid(id));
+            var task = await _mediator.Send(query);
             return task == null ? NotFound() : Ok(_mapper.Map<TaskItemDto>(task));
         }
 
         [HttpPost()]
-        public IActionResult CompleteTask(string id)
+        public async Task<IActionResult> CompleteTask(string id)
         {
-            _taskService.CompleteTask(new Guid(id));
-
+            var command = new CompleteTaskCommand(new Guid(id));
+            await _mediator.Send(command);
             return Ok();
         }
     }

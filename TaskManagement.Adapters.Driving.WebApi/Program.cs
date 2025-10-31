@@ -1,10 +1,12 @@
 
+using MediatR;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Adapters.Driven.EntityFramework;
 using TaskManagement.Core.Ports.Driven;
 using TaskManagement.Core.Ports.Driving;
 using TaskManagement.Core.Ports.Services;
+using TaskManagement.Core.UseCases.Commands;
 
 namespace TaskManagement.Adapters.Driving.WebApi
 {
@@ -21,9 +23,10 @@ namespace TaskManagement.Adapters.Driving.WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddMediatR(typeof(CreateTaskHandler).Assembly);
+
             //Configure dependency injection
             builder.Services.AddScoped<ITaskRepository, EfTaskRepository>();
-            builder.Services.AddScoped<ITaskService, TaskService>();
 
             builder.Services.AddAutoMapper(cfg =>
             {

@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TaskManagement.Adapters.Driven.EntityFramework;
 using TaskManagement.Core.Ports.Driven;
-using TaskManagement.Core.UseCases.Commands;
+using TaskManagement.Core.Ports.Driving.UseCases.CreateTask;
 
 namespace TaskManagement.Adapters.Driving.ConsoleApp
 {

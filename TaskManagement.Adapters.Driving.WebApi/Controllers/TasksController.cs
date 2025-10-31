@@ -2,8 +2,9 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Core.Ports.Driving.DTOs;
-using TaskManagement.Core.UseCases.Commands;
-using TaskManagement.Core.UseCases.Queries;
+using TaskManagement.Core.Ports.Driving.UseCases.CompleteTask;
+using TaskManagement.Core.Ports.Driving.UseCases.CreateTask;
+using TaskManagement.Core.Ports.Driving.UseCases.GetTask;
 
 namespace TaskManagement.Adapters.Driving.WebApi.Controllers
 {

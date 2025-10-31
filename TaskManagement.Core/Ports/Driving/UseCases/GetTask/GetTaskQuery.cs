@@ -2,11 +2,11 @@
 using TaskManagement.Core.Domain;
 using TaskManagement.Core.Ports.Driven;
 
-namespace TaskManagement.Core.UseCases.Queries
+namespace TaskManagement.Core.Ports.Driving.UseCases.GetTask
 {
     public record GetTaskQuery(Guid Id) : IRequest<TaskItem?>;
 
-    public class GetTaskHandler: IRequestHandler<GetTaskQuery, TaskItem?>
+    public class GetTaskHandler : IRequestHandler<GetTaskQuery, TaskItem?>
     {
         private readonly ITaskRepository _taskRepository;
 

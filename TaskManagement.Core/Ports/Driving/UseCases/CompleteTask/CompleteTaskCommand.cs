@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using TaskManagement.Core.Ports.Driven;
 
-namespace TaskManagement.Core.UseCases.Commands
+namespace TaskManagement.Core.Ports.Driving.UseCases.CompleteTask
 {
     public record CompleteTaskCommand(Guid Id) : IRequest;
 

@@ -2,7 +2,7 @@
 using TaskManagement.Core.Domain;
 using TaskManagement.Core.Ports.Driven;
 
-namespace TaskManagement.Core.UseCases.Commands
+namespace TaskManagement.Core.Ports.Driving.UseCases.CreateTask
 {
     public record CreateTaskCommand(string Title) : IRequest<TaskItem>;
 

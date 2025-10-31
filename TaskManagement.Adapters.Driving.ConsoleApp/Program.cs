@@ -2,6 +2,8 @@
 using TaskManagement.Core.Ports.Driving;
 using TaskManagement.Core.Ports.Services;
 using TaskManagement.Adapters.Driven.InMemory;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TaskManagement.Adapters.Driving.ConsoleApp
 {
@@ -9,26 +11,22 @@ namespace TaskManagement.Adapters.Driving.ConsoleApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to The TaskManagement Hexagonal App.");
+            var host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddScoped<ITaskRepository, InMemoryTaskRepository>();
 
-            //Wire up adapters and ports
-            ITaskRepository taskRepository = new InMemoryTaskRepository();
-            ITaskService taskService = new TaskService(taskRepository);
+                    services.AddScoped<ITaskService, TaskService>();
 
-            // Create a task
-            Console.WriteLine("Creating task...");
-            var task = taskService.CreateTask("My very first Task. Yay!");
-            Console.WriteLine("Created!");
+                    services.AddScoped<ConsoleAppRunner>();
+                })
+                .Build();
 
-            // Complete it!
-            Console.WriteLine("Completing task...");
-            taskService.CompleteTask(task.Id);
-            Console.WriteLine("Completed!");
+            using var scope = host.Services.CreateScope();
+            
+            var appRunner = scope.ServiceProvider.GetService<ConsoleAppRunner>();
 
-            // Retrieve it
-            Console.WriteLine("Retrieving task...");
-            var retrievedTask = taskService.GetTask(task.Id);
-            Console.WriteLine($"Retrieved task {task.Id}. Title: {task.Title}");
+            appRunner?.Run();
         }
     }
 }

@@ -1,23 +1,24 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using MediatR;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TaskManagement.Adapters.Driven.EntityFramework;
 using TaskManagement.Core.Ports.Driven;
-using TaskManagement.Core.Ports.Driving;
-using TaskManagement.Core.Ports.Services;
+using TaskManagement.Core.UseCases.Commands;
 
 namespace TaskManagement.Adapters.Driving.ConsoleApp
 {
     public class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
                     services.AddScoped<ITaskRepository, EfTaskRepository>();
-                    services.AddScoped<ITaskService, TaskService>();
+
+                    services.AddMediatR(typeof(CreateTaskHandler).Assembly);
 
                     services.AddAutoMapper(cfg =>
                     {
@@ -50,7 +51,7 @@ namespace TaskManagement.Adapters.Driving.ConsoleApp
 
                 var appRunner = scope.ServiceProvider.GetService<ConsoleAppRunner>();
 
-                appRunner?.Run();
+                await appRunner?.Run();
             }
 
             host.Dispose();

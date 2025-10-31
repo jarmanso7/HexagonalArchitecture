@@ -1,38 +1,43 @@
 ﻿using AutoMapper;
-using TaskManagement.Core.Ports.Driving;
+using MediatR;
 using TaskManagement.Core.Ports.Driving.DTOs;
+using TaskManagement.Core.UseCases.Commands;
+using TaskManagement.Core.UseCases.Queries;
 
 namespace TaskManagement.Adapters.Driving.ConsoleApp
 {
 
     public class ConsoleAppRunner
     {
-        private readonly ITaskService _taskService;
+        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
-        public ConsoleAppRunner(ITaskService taskService, IMapper mapper)
+        public ConsoleAppRunner(IMediator mediator, IMapper mapper)
         {
-            _taskService = taskService;
+            _mediator = mediator;
             _mapper = mapper;
         }
 
-        public void Run()
+        public async Task Run()
         {
             Console.WriteLine("Welcome to The TaskManagement Hexagonal App.");
 
             // Create a task
             Console.WriteLine("Creating task...");
-            var task = _taskService.CreateTask("My very first Task. Yay!");
+            var createCommand = new CreateTaskCommand("My very first Task. Yay!");
+            var task = await _mediator.Send(createCommand);
             Console.WriteLine("Created!");
 
             // Complete it!
             Console.WriteLine("Completing task...");
-            _taskService.CompleteTask(task.Id);
+            var completeCommand = new CompleteTaskCommand(task.Id);
+            _ = await _mediator.Send(completeCommand);
             Console.WriteLine("Completed!");
 
             // Retrieve it
             Console.WriteLine("Retrieving task...");
-            var retrievedTask = _taskService.GetTask(task.Id);
+            var getQuery = new GetTaskQuery(task.Id);
+            var retrievedTask = await _mediator.Send(getQuery);
 
             var dtoTask = _mapper.Map<TaskItemDto>(retrievedTask);
             Console.WriteLine($"Retrieved task {dtoTask.Id}. Title: {dtoTask.Title}");

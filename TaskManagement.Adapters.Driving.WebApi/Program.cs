@@ -4,8 +4,6 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Adapters.Driven.EntityFramework;
 using TaskManagement.Core.Ports.Driven;
-using TaskManagement.Core.Ports.Driving;
-using TaskManagement.Core.Ports.Services;
 using TaskManagement.Core.UseCases.Commands;
 
 namespace TaskManagement.Adapters.Driving.WebApi

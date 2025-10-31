@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TaskManagement.Adapters.Driven.InMemory\TaskManagement.Adapters.Driven.InMemory.csproj" />
+    <ProjectReference Include="..\TaskManagement.Adapters.Driven.EntityFramework\TaskManagement.Adapters.Driven.EntityFramework.csproj" />
     <ProjectReference Include="..\TaskManagement.Core\TaskManagement.Core.csproj" />
   </ItemGroup>
 
